@@ -2,36 +2,104 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Генератор ников и паролей</title>
+  <title>Генератор Ников и Паролей</title>
   <style>
-    body { background: #111; color: #fff; font-family: sans-serif; text-align: center; padding: 30px; }
-    button, select { padding: 10px; font-size: 16px; margin-top: 10px; border-radius: 8px; }
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+    h1 {
+      color: #00ff88;
+    }
+    select, button, input {
+      margin: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      width: 250px;
+    }
+    button {
+      background-color: #00ff88;
+      color: #000;
+      cursor: pointer;
+    }
+    .output {
+      font-size: 18px;
+      margin: 10px;
+      word-wrap: break-word;
+    }
   </style>
 </head>
 <body>
-  <h1>🎲 Генератор ников и паролей</h1>
-  <select id="type">
-    <option value="girl">Для девушки</option>
-    <option value="boy">Для парня</option>
-    <option value="biz">Для бизнеса</option>
-  </select><br>
-  <button onclick="generate()">Сгенерировать</button>
-  <div id="output" style="margin-top:20px;font-size:18px;"></div>
+  <h1>Генератор Ников и Паролей 🔐</h1>
+
+  <select id="gender">
+    <option value="male">Мужской</option>
+    <option value="female">Женский</option>
+  </select>
+
+  <select id="purpose">
+    <option value="game">Для игр</option>
+    <option value="business">Для бизнеса</option>
+    <option value="social">Для соцсетей</option>
+  </select>
+
+  <button onclick="generateNick()">🎮 Сгенерировать ник</button>
+  <div class="output" id="nickOutput">Ник: —</div>
+  <button onclick="copyToClipboard('nickOutput')">📋 Скопировать ник</button>
+
+  <hr style="width: 80%; margin: 30px 0;">
+
+  <button onclick="generatePassword()">🔒 Сгенерировать пароль</button>
+  <div class="output" id="passOutput">Пароль: —</div>
+  <button onclick="copyToClipboard('passOutput')">📋 Скопировать пароль</button>
 
   <script>
-    const data = {
-      girl: ["Luna", "Mira", "Nika", "Skyla", "AngelGirl"],
-      boy: ["Rex", "DarkWolf", "VxR", "Shadow", "GhostKing"],
-      biz: ["ProBiz", "CloudNova", "Webify", "TrustNet", "Marketron"]
-    };
-    const passwords = ["qwerty123", "Admin2025!", "Pa$$w0rd!", "SecretKey", "MySecure123"];
+    const maleNames = ["Vortex", "Blaze", "Hunter", "Storm", "Shadow"];
+    const femaleNames = ["Luna", "Roxy", "Bliss", "Nova", "Sasha"];
+    const gameSuffixes = ["X", "_Pro", "YT", "1337", "GG"];
+    const businessSuffixes = ["_dev", ".corp", "_team", "_biz", "_ltd"];
+    const socialSuffixes = ["_", ".official", "TV", "live", "real"];
 
-    function generate() {
-      const type = document.getElementById("type").value;
-      const nick = data[type][Math.floor(Math.random() * data[type].length)];
-      const pass = passwords[Math.floor(Math.random() * passwords.length)];
-      document.getElementById("output").innerHTML = `<b>Ник:</b> ${nick}<br><b>Пароль:</b> ${pass}`;
+    function generateNick() {
+      const gender = document.getElementById("gender").value;
+      const purpose = document.getElementById("purpose").value;
+
+      let name = gender === "male"
+        ? maleNames[Math.floor(Math.random() * maleNames.length)]
+        : femaleNames[Math.floor(Math.random() * femaleNames.length)];
+
+      let suffixList = purpose === "game"
+        ? gameSuffixes
+        : purpose === "business"
+        ? businessSuffixes
+        : socialSuffixes;
+
+      let suffix = suffixList[Math.floor(Math.random() * suffixList.length)];
+      document.getElementById("nickOutput").textContent = "Ник: " + name + suffix;
+    }
+
+    function generatePassword() {
+      const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+      let password = "";
+      for (let i = 0; i < 12; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById("passOutput").textContent = "Пароль: " + password;
+    }
+
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).textContent.split(": ")[1];
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Скопировано: " + text);
+      });
     }
   </script>
 </body>
-    </html>
+</html>
